@@ -4,9 +4,7 @@ import os
 
 class MacroDataProcessor:
     def __init__(self, file_path="macro_data.csv", output_folder="post_processed_data"):
-        """
-        Initialize the MacroDataProcessor class with file path and output folder.
-        """
+     
         self.file_path = file_path
         self.output_folder = output_folder
         self.logger = logging.getLogger(__name__)
@@ -16,9 +14,6 @@ class MacroDataProcessor:
         )
 
     def run_macro_postProcess(self):
-        """
-        Load, preprocess, and save macroeconomic data.
-        """
         try:
             self.logger.info("Starting macro data post-processing.")
             
@@ -63,6 +58,3 @@ class MacroDataProcessor:
         except Exception as e:
             self.logger.error(f"Error during macro data processing: {e}")
 
-if __name__ == "__main__":
-    processor = MacroDataProcessor()
-    processor.run_macro_postProcess()

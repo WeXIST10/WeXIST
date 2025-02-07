@@ -4,9 +4,7 @@ import logging
 
 class MacroDataDownloader:
     def __init__(self, start_date="2017-01-01", end_date="2022-01-01"):
-        """
-        Initialize the MacroDataDownloader class with date range.
-        """
+        
         self.start_date = start_date
         self.end_date = end_date
         self.logger = logging.getLogger(__name__)
@@ -16,7 +14,6 @@ class MacroDataDownloader:
         )
     
     def _download_data(self, ticker, column_name):
-        """Helper method to download and process data from Yahoo Finance."""
         try:
             self.logger.info(f"Downloading {column_name} data...")
             df = yf.download(ticker, start=self.start_date, end=self.end_date)
@@ -27,9 +24,6 @@ class MacroDataDownloader:
             return pd.DataFrame()
     
     def run_download_macro(self, output_file):
-        """
-        Download macroeconomic data, preprocess, and save to CSV.
-        """
         try:
             self.logger.info("Starting macroeconomic data download and preprocessing.")
             
@@ -44,7 +38,3 @@ class MacroDataDownloader:
             self.logger.info(f"Preprocessed macro data saved to {output_file}")
         except Exception as e:
             self.logger.error(f"Error during macro data processing: {e}")
-
-if __name__ == "__main__":
-    downloader = MacroDataDownloader()
-    downloader.run_download_macro("macro_data.csv")

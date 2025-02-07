@@ -59,12 +59,3 @@ class DataMerger:
         self.merge_data()
         return self.output_file
 
-# Example usage
-if __name__ == "__main__":
-    input_directory = 'post_processed_data'
-    macro_file = 'macro.csv'
-    output_file = 'combined_stock_data.csv'
-    
-    merger = DataMerger(input_directory, macro_file, output_file)
-    combined_file = merger.run_combine_data()
-    print(f"Combined data saved as: {combined_file}")

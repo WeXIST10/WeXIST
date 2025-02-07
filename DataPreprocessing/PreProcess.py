@@ -3,10 +3,8 @@ import os
 import logging
 
 class StockDataPreprocessor:
-    """Class for preprocessing stock data with missing value handling and feature preparation."""
     
     def __init__(self, log_file='preprocessing.log'):
-        """Initialize the preprocessor with default parameters and logging."""
         self.threshold_column = 0.5  # 50% threshold for column dropping
         self.threshold_row = 0.2     # 20% threshold for row dropping
         
@@ -25,7 +23,6 @@ class StockDataPreprocessor:
         self.logger.info("StockDataPreprocessor initialized.")
 
     def _validate_file(self, file_path):
-        """Helper method to check if a file is a CSV and can be read."""
         try:
             df = pd.read_csv(file_path, skiprows=3)
             self.logger.info(f"Successfully read file: {file_path}")
@@ -35,7 +32,6 @@ class StockDataPreprocessor:
         return True
 
     def _process_columns(self, df):
-        """Handle data validation, date conversion, and numeric type conversion."""
         required_columns = ['Date', 'Open', 'High', 'Low', 'Close', 'Volume', 'EPS', 'PE_Ratio', 'Volatility_30D']
         missing = [col for col in required_columns if col not in df.columns]
         if missing:
@@ -54,7 +50,6 @@ class StockDataPreprocessor:
         return df
 
     def _handle_missing_values(self, df):
-        """Handle missing data with ffill, bfill, and threshold-based dropping."""
         df = df.ffill().bfill()
         
         threshold_col = len(df) * self.threshold_column
@@ -67,9 +62,7 @@ class StockDataPreprocessor:
         return df
 
     def run_preprocessing(self, input_dir, output_dir):
-        """
-        Main preprocessing method to handle directory iteration and file processing.
-        """
+       
         self.logger.info("Starting preprocessing pipeline...")
 
         if not os.path.exists(output_dir):
@@ -103,10 +96,3 @@ class StockDataPreprocessor:
             except Exception as e:
                 self.logger.error(f"Error processing {filename}: {str(e)}")
 
-# Example usage
-if __name__ == "__main__":
-    input_directory = 'stock_data'
-    output_directory = 'preprocessed_data'
-
-    preprocessor = StockDataPreprocessor()
-    preprocessor.run_preprocessing(input_directory, output_directory)

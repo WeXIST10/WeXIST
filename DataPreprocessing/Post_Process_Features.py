@@ -3,10 +3,7 @@ import os
 import logging
 
 class StockDataPostProcessor:
-    """Class for post-processing stock data by handling missing values, outliers, and capping extreme values."""
-    
     def __init__(self, log_file='postprocessing.log'):
-        """Initialize the post-processor with logging configuration."""
         self.logger = logging.getLogger(__name__)
         self.logger.setLevel(logging.INFO)
         file_handler = logging.FileHandler(log_file)
@@ -21,7 +18,6 @@ class StockDataPostProcessor:
         self.logger.info("StockDataPostProcessor initialized.")
     
     def _handle_missing_values(self, df):
-        """Handle missing data with ffill, bfill, and threshold-based dropping."""
         df = df.ffill().bfill()
         
         threshold_col = len(df) * 0.5
@@ -34,7 +30,6 @@ class StockDataPostProcessor:
         return df
     
     def _remove_outliers(self, df):
-        """Remove outliers using IQR method for numerical features."""
         numerical_cols = df.select_dtypes(include=['float64', 'int64']).columns.tolist()
         for col in numerical_cols:
             if col != 'VM_t':  # Skip volatility metric column
@@ -49,7 +44,6 @@ class StockDataPostProcessor:
         return df
     
     def _cap_volatility_metrics(self, df):
-        """Cap extreme values for volatility metrics (VM_t)."""
         if 'VM_t' in df.columns:
             lower_cap = df['VM_t'].quantile(0.01)
             upper_cap = df['VM_t'].quantile(0.99)
@@ -59,7 +53,6 @@ class StockDataPostProcessor:
         return df
     
     def run_postprocess(self, input_dir, output_dir):
-        """Main method to handle directory iteration and file processing."""
         self.logger.info("Starting post-processing pipeline...")
         
         if not os.path.exists(output_dir):
@@ -87,10 +80,3 @@ class StockDataPostProcessor:
             except Exception as e:
                 self.logger.error(f"Error processing {filename}: {str(e)}")
 
-# Example usage
-if __name__ == "__main__":
-    input_directory = 'feature_added_data'
-    output_directory = 'post_processed_data'
-    
-    postprocessor = StockDataPostProcessor()
-    postprocessor.run_postprocess(input_directory, output_directory)

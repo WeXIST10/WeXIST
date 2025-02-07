@@ -6,13 +6,7 @@ from DataPreprocessing.Download_Macro import MacroDataDownloader
 from DataPreprocessing.PreProcessMacro import MacroDataProcessor
 from DataPreprocessing.CombineDf import DataMerger
 
-# from CollectData import StockDataCollector
-# from PreProcess import StockDataPreprocessor
-# from FeatureEngineer import StockFeatureEngineer
-# from Post_Process_Features import StockDataPostProcessor
-# from Download_Macro import MacroDataDownloader
-# from PreProcessMacro import MacroDataProcessor
-# from CombineDf import DataMerger
+
 
 class StockPreProcessPipeline:
     def __init__(self):
@@ -65,12 +59,3 @@ class StockPreProcessPipeline:
         
         return combined_file
 
-# Usage example
-if __name__ == "__main__":
-    pipeline = StockPreProcessPipeline()
-    ticker_list = ['AAPL', 'MSFT', 'AMZN', 'GOOG', 'META', 'TSLA', 'V', 'JPM', 'JNJ', 'PG']
-    start_date = "2017-01-01"
-    end_date = "2022-01-01"
-
-    combined_csv_path = pipeline.run_data_pipeline(ticker_list, start_date, end_date)
-    print(f"Combined data saved to: {combined_csv_path}")
