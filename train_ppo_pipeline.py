@@ -1,24 +1,20 @@
 from DataPreprocessing.DataPreprocessingPipeline import StockPreProcessPipeline
-from Environment.New_testing import RecurrentPPOTradingBot  # Updated to use RecurrentPPOTradingBot
+from Environment.New_testing import RecurrentPPOTradingBot 
 import math
 import os
 
 def train_stock_models(tickers, start_date, end_date, batch_size=7, checkpoint_dir="./checkpoints"):
-    """
-    Train stock models with periodic checkpointing and batch processing using RecurrentPPO
-    """
+   
     pipeline = StockPreProcessPipeline()
-    bot = RecurrentPPOTradingBot()  # Initialize the Recurrent PPO trading bot
+    bot = RecurrentPPOTradingBot() 
     
     # Create checkpoint directory
     os.makedirs(checkpoint_dir, exist_ok=True)
     
-    # Calculate number of batches
     n_batches = math.ceil(len(tickers) / batch_size)
     current_model_path = None
     current_env_path = None
     
-    # Keep track of total steps for checkpointing
     total_steps = 0
     
     for batch_idx in range(n_batches):
@@ -31,7 +27,6 @@ def train_stock_models(tickers, start_date, end_date, batch_size=7, checkpoint_d
         print(f"Tickers: {current_tickers}")
         
         try:
-            # Generate combined data for current batch
             combined_csv_path = pipeline.run_data_pipeline(
                 current_tickers, 
                 start_date, 
@@ -39,7 +34,6 @@ def train_stock_models(tickers, start_date, end_date, batch_size=7, checkpoint_d
             )
             print(f"Combined data saved to: {combined_csv_path}")
             
-            # For first batch, train from scratch
             if batch_idx == 0:
                 print("Training initial model from scratch...")
                 current_model_path, current_env_path = bot.train_from_scratch(
@@ -49,7 +43,6 @@ def train_stock_models(tickers, start_date, end_date, batch_size=7, checkpoint_d
                 )
                 print(f"Initial model saved to: {current_model_path}")
                 
-            # For subsequent batches, use pretrained model
             else:
                 print("Training with pretrained model...")
                 current_model_path, current_env_path = bot.train_pretrained(
@@ -61,7 +54,6 @@ def train_stock_models(tickers, start_date, end_date, batch_size=7, checkpoint_d
                 )
                 print(f"Updated model saved to: {current_model_path}")
             
-            # Save batch-specific checkpoint
             batch_checkpoint_path = os.path.join(
                 checkpoint_dir, 
                 f"batch_{batch_idx + 1}_model"
@@ -71,7 +63,6 @@ def train_stock_models(tickers, start_date, end_date, batch_size=7, checkpoint_d
                 f"batch_{batch_idx + 1}_env.pkl"
             )
             
-            # Save both model and environment state after each batch
             if current_model_path and current_env_path:
                 os.system(f"cp {current_model_path}.zip {batch_checkpoint_path}.zip")
                 os.system(f"cp {current_env_path} {batch_env_path}")
@@ -79,7 +70,6 @@ def train_stock_models(tickers, start_date, end_date, batch_size=7, checkpoint_d
                 
         except Exception as e:
             print(f"Error processing batch {batch_idx + 1}: {str(e)}")
-            # Save emergency checkpoint if we have a model
             if current_model_path and current_env_path:
                 emergency_path = os.path.join(
                     checkpoint_dir,
@@ -93,7 +83,6 @@ def train_stock_models(tickers, start_date, end_date, batch_size=7, checkpoint_d
     return current_model_path, current_env_path
 
 if __name__ == "__main__":
-    # Define your parameters
     tickers = [ 
         "RELIANCE.NS", "TCS.NS", "INFY.NS", "HDFCBANK.NS", "ICICIBANK.NS",
         "HINDUNILVR.NS", "HDFC.NS", "KOTAKBANK.NS", "ITC.NS", "LT.NS",
@@ -109,9 +98,8 @@ if __name__ == "__main__":
     
     start_date = "2015-01-01"
     end_date = "2025-01-01"
-    checkpoint_dir = "./model_checkpoints"  # Specify checkpoint directory
+    checkpoint_dir = "./model_checkpoints"  
     
-    # Run the training pipeline
     try:
         final_model_path, final_env_path = train_stock_models(
             tickers=tickers,
