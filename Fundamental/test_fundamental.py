@@ -73,14 +73,3 @@ class BacktestFundamental:
         
         return predictions[["Ticker", "PredictedReturn"]].head(10)
 
-# Example usage
-if __name__ == "__main__":
-    nifty_url = "https://archives.nseindia.com/content/indices/ind_nifty500list.csv"
-    model_path = r"C:\Darsh\WeXIST_FINAL\xgboost_model.bin"
-    
-    backtest = BacktestFundamental(nifty_url, model_path)
-    top_stocks = backtest.run_backtest()
-    top_10_tickers = top_stocks.head(10)[['Ticker']]
-    print("\nTop 10 Stocks from Backtest:")
-    print(top_stocks)
-    top_stocks.to_csv("backtest_results.csv", index=False)

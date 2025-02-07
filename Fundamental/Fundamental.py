@@ -150,13 +150,3 @@ class StockPipeline:
         
         return self.predictions[["Ticker", "PredictedReturn"]]
 
-# Example usage:
-if __name__ == "__main__":
-    nifty_url = "https://archives.nseindia.com/content/indices/ind_nifty500list.csv&#34"; 
-    pipeline = StockPipeline(nifty_url, num_stocks=300)
-    top_stocks = pipeline.run_pipeline()
-    
-    # Save or process results
-    top_stocks.to_csv("top_10_stocks.csv", index=False)
-    print("\nTop 10 Predicted Stocks:")
-    print(top_stocks)
