@@ -181,4 +181,4 @@ with tab3:
 
 # Footer
 st.markdown("---")
-st.markdown("*Built with ❤️ using Streamlit and Python*")
+st.markdown("*WeXIST Trading Bot*")

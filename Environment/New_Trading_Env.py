@@ -318,7 +318,7 @@ class MultiStockTradingEnv(gym.Env):
         
         shares_to_sell = int(available_shares * sell_pct)
         
-        shares_to_sell = min(shares_to_sell, self.h_max[stock_id])
+        shares_to_sell = min(shares_to_sell, self.hmax_per_stock[stock_id])
         
         if shares_to_sell > 0:
             price = self.data[f'close_{stock_id}']

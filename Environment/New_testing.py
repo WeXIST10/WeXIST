@@ -8,15 +8,6 @@ from stable_baselines3.common.evaluation import evaluate_policy
 from stable_baselines3.common.noise import NormalActionNoise
 from Environment.New_Trading_Env import MultiStockTradingEnv
 
-import os
-import pandas as pd
-import numpy as np
-from stable_baselines3 import TD3
-from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
-from stable_baselines3.common.callbacks import CheckpointCallback
-from stable_baselines3.common.evaluation import evaluate_policy
-from stable_baselines3.common.noise import NormalActionNoise
-from Environment.New_Trading_Env import MultiStockTradingEnv
 
 class TD3TradingBot:
     def __init__(self, num_stocks=5, initial_amount=100000.00):
@@ -54,9 +45,7 @@ class TD3TradingBot:
         return VecNormalize(env, norm_obs=True, norm_reward=True, clip_obs=10.0)
 
     def train_from_scratch(self, csv_file_path, total_timesteps=100000, save_path="./models/"):
-        """
-        Train a new TD3 model from scratch with periodic checkpointing
-        """
+        
         print("Starting training from scratch...")
         
         # Create save directories
@@ -113,9 +102,7 @@ class TD3TradingBot:
         return final_model_path, final_env_path
 
     def train_pretrained(self, csv_file_path, model_path, env_path, total_timesteps=50000, save_path="./models/"):
-        """
-        Continue training from a pretrained model with periodic checkpointing
-        """
+        
         print("Loading pretrained model and continuing training...")
         
         # Create save directories
@@ -161,9 +148,7 @@ class TD3TradingBot:
         return final_model_path, final_env_path
 
     def evaluate_model(self, n_eval_episodes=10):
-        """
-        Evaluate the current model
-        """
+       
         mean_reward, std_reward = evaluate_policy(self.model, self.env, n_eval_episodes=n_eval_episodes)
         print(f"Mean reward: {mean_reward} ± {std_reward}")
         
@@ -172,22 +157,3 @@ class TD3TradingBot:
         
         return mean_reward, std_reward
     
-    
-# Example Usage
-if __name__ == "__main__":
-    # Initialize the trading bot
-    bot = TD3TradingBot()
-    
-    # Example of training from scratch
-    model_path, env_path = bot.train_from_scratch(
-        csv_file_path="path/to/your/data.csv",
-        total_timesteps=100000
-    )
-    
-    # Example of continuing training from pretrained model
-    new_model_path, new_env_path = bot.train_pretrained(
-        csv_file_path="path/to/your/new_data.csv",
-        model_path=model_path,
-        env_path=env_path,
-        total_timesteps=50000
-    )
